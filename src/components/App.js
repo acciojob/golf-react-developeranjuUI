@@ -14,7 +14,8 @@ class App extends Component {
     };
 
     buttonClickHandler() {
-   
+        this.setState({renderBall: true});
+        window.focus();
    }
     renderBallOrButton() {
 		if (this.state.renderBall) {
@@ -25,8 +26,25 @@ class App extends Component {
     }
 
     // bind ArrowRight keydown event
-    componentDidMount() {
-      
+   componentDidUpdate(prevProps, prevState) {
+    if (!prevState.renderBall && this.state.renderBall) {
+        document.addEventListener("keydown", this.handleKeyDown);
+    }
+}
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyDown);
+    }
+
+    handleKeyDown = (event) => {
+        if(event.key === "ArrowRight"){
+            this.setState((prevState) => {
+                const newPos = prevState.posi + 5;
+                return {
+                    posi: newPos,
+                    ballPosition: { left: newPos + "px" }
+                };
+            });
+        }
     }
 
     render() {
